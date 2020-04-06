@@ -10,7 +10,8 @@ import Footer from "./componentes/Footer";
 import { TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from "./server/firebase";
-
+import ReactNotification, { store } from "react-notifications-component";
+import { toast } from "./funciones/toast";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -18,15 +19,16 @@ const useStyles = makeStyles((theme) => ({
       width: "25ch",
     },
   },
-  inputCreate:{
-    marginTop:"10px",
-  }
+  inputCreate: {
+    marginTop: "10px",
+  },
 }));
 
 function App() {
   const classes = useStyles();
   const [tareas, setTareas] = React.useState([]);
   const [tareaNueva, setTareaNUeva] = React.useState({});
+  const [cargando, setStateCargando] = React.useState(true);
 
   const handleTarea = (event) => {
     setTareaNUeva(event.target.value);
@@ -38,14 +40,16 @@ function App() {
   };
 
   React.useEffect(() => {
+    toast("Tareas", "Cargando tareas...", "info");
     const db = firebase.firestore();
     return db.collection("todos").onSnapshot((snapshot) => {
       const dataAux = [];
       snapshot.forEach((doc) => {
         dataAux.push({ ...doc.data(), id: doc.id });
       });
-      console.log(dataAux);
+      setStateCargando(false);
       setTareas(dataAux);
+      // toast("Tareas", "Tareas cargadas", "info");
     });
   }, []);
 
@@ -53,10 +57,12 @@ function App() {
     console.log(tareaNueva);
     const db = firebase.firestore();
     db.collection("todos").add({ name: tareaNueva });
+    toast("Creacion de tarea", "Tarea creada satisfactoriamente...", "success");
   };
 
   return (
     <div className="App">
+      <ReactNotification />
       <Header></Header>
       <div className={classes.inputCreate}>
         <form className={classes.root} noValidate autoComplete="off">
@@ -74,7 +80,7 @@ function App() {
         </Button>
       </div>
       <Container fixed>
-        {tareas.length > 0 ? (
+        {!cargando ?(tareas.length > 0 ? (
           tareas.map((tarea) => {
             return (
               <Tarea key={tarea.id + " " + tarea.name} tarea={tarea}></Tarea>
@@ -82,7 +88,7 @@ function App() {
           })
         ) : (
           <div>No hay tareas disponibles...</div>
-        )}
+        )):(<div>Cargando tareas...</div>)}
       </Container>
 
       <Footer></Footer>

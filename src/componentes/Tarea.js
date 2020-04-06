@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import firebase from "../server/firebase";
 import { TextField } from "@material-ui/core";
+import { toast } from "../funciones/toast";
 const useStyles = makeStyles({
   root: {
     margin: "auto 0",
@@ -33,7 +34,7 @@ const useStyles = makeStyles({
 function Tarea(props) {
   const [tarea, setTarea] = React.useState(props.tarea);
   const classes = useStyles();
-  const [tareaNueva, setTareaNUeva] = React.useState({});
+  const [tareaNueva, setTareaNUeva] = React.useState(props.tarea.name);
 
   const handleTarea = (event) => {
     setTareaNUeva(event.target.value);
@@ -42,10 +43,12 @@ function Tarea(props) {
     console.log(tareaNueva);
     const db = firebase.firestore();
     db.collection("todos").doc(tarea.id).set({ name: tareaNueva });
+    toast("Tareas","Tarea actualizada satisfactoriamente...","success");
   };
   const onDelete = () => {
     const db = firebase.firestore();
     db.collection("todos").doc(tarea.id).delete();
+    toast("Tareas","Tarea eliminada satisfactoriamente...","danger");
   };
   return (
     <Card className={classes.root}>
