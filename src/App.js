@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Container, Button } from "@material-ui/core";
+import { Container, Button, Grid, Paper } from "@material-ui/core";
 import "typeface-roboto";
 import { red } from "@material-ui/core/colors";
 import Header from "./componentes/Header";
@@ -21,6 +21,15 @@ const useStyles = makeStyles((theme) => ({
   },
   inputCreate: {
     marginTop: "10px",
+  },
+  contenedor: {
+    margin: "auto",
+    // backgroundColor: "red",
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -79,17 +88,27 @@ function App() {
           Guardar
         </Button>
       </div>
-      <Container fixed>
-        {!cargando ?(tareas.length > 0 ? (
-          tareas.map((tarea) => {
-            return (
-              <Tarea key={tarea.id + " " + tarea.name} tarea={tarea}></Tarea>
-            );
-          })
+      <Container className={classes.contenedor}>
+        {!cargando ? (
+          tareas.length > 0 ? (
+            tareas.map((tarea) => {
+              return (
+                <Grid container spacing={3}>
+                  <Tarea
+                    key={tarea.id + " " + tarea.name}
+                    tarea={tarea}
+                  ></Tarea>
+                </Grid>
+              );
+            })
+          ) : (
+            <div>No hay tareas disponibles...</div>
+          )
         ) : (
-          <div>No hay tareas disponibles...</div>
-        )):(<div>Cargando tareas...</div>)}
+          <div>Cargando tareas...</div>
+        )}
       </Container>
+     
 
       <Footer></Footer>
     </div>

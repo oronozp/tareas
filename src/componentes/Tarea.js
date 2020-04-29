@@ -6,17 +6,19 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import firebase from "../server/firebase";
-import { TextField } from "@material-ui/core";
+import { TextField, Grid, IconButton } from "@material-ui/core";
 import { toast } from "../funciones/toast";
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 const useStyles = makeStyles({
   root: {
-    margin: "auto 0",
+    margin: "auto",
     marginTop: "20px",
-    minWidth: "100px",
-    maxWidth: "300px",
-    paddingTop: "20px",
+    // minWidth: "100px",
+    // maxWidth: "300px",
+    // paddingTop: "20px",
+    marginBottom:"20px",
     backgroundColor: "white",
-    marginBottom: "20px",
   },
   bullet: {
     display: "inline-block",
@@ -43,43 +45,36 @@ function Tarea(props) {
     console.log(tareaNueva);
     const db = firebase.firestore();
     db.collection("todos").doc(tarea.id).set({ name: tareaNueva });
-    toast("Tareas","Tarea actualizada satisfactoriamente...","success");
+    toast("Tareas", "Tarea actualizada satisfactoriamente...", "success");
   };
   const onDelete = () => {
     const db = firebase.firestore();
     db.collection("todos").doc(tarea.id).delete();
-    toast("Tareas","Tarea eliminada satisfactoriamente...","danger");
+    toast("Tareas", "Tarea eliminada satisfactoriamente...", "danger");
   };
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <TextField
-          onChange={handleTarea}
-          id="outlined-basic"
-          label=""
-          variant="outlined"
-          defaultValue={tarea.name}
-        />
-      </CardContent>
-      <CardActions>
-        <Button
-          size="small"
-          variant="contained"
-          color="primary"
-          onClick={onDelete}
-        >
-          Eliminar
-        </Button>
-        <Button
-          size="small"
-          variant="contained"
-          color="secondary"
-          onClick={onUpdate}
-        >
-          Editar
-        </Button>
-      </CardActions>
-    </Card>
+    <Grid xs={12} md={10} lg={10}  xl={10} className={classes.root} spacing="1">
+      <Card>
+        <CardContent>
+          <TextField
+            onChange={handleTarea}
+            id="outlined-basic"
+            label=""
+            variant="outlined"
+            defaultValue={tarea.name}
+          />
+        </CardContent>
+        <CardActions>
+          <IconButton  color="primary"onClick={onUpdate} aria-label="delete" className={classes.margin}>
+            <EditIcon fontSize="large" />
+          </IconButton>
+
+          <IconButton  color="secondary" onClick={onDelete} aria-label="delete" className={classes.margin}>
+            <DeleteIcon fontSize="large" />
+          </IconButton>
+        </CardActions>
+      </Card>
+    </Grid>
   );
 }
 
