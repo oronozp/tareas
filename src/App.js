@@ -110,7 +110,7 @@ function App() {
       </Container>
      
 
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
     </div>
   );
 }
